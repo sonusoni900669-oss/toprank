@@ -6,205 +6,112 @@
     <title>Elite Ranking - Crystal Edition</title>
     
     <style>
-        /* --- DESIGN & FRAMES --- */
         :root {
-            --r1-box-size: 135px; --r1-frame-scale: 148%; --r1-img-fit: 45%; --r1-y-offset: 0px;
-            --r2-box-size: 74px; --r2-frame-scale: 112%; --r2-img-fit: 55%; --r2-gap: 86px; --r2-y-offset: 15px;
-            --r3-box-size: 90px; --r3-frame-scale: 112%; --r3-img-fit: 50%; --r3-gap: 88px; --r3-y-offset: 15px;
-            --r1-podium-w: 135px;
-            --r1-podium-h: 115px;
-            --r-other-podium-w: 90px;
-            --r-other-podium-h: 112px;
-            --crown-icon-size: 60px;
-        }
-
-        .crown-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background-color: transparent !important;
-            border: none !important;
+            /* Responsive sizes using vw (phone ke hisaab se auto-size) */
+            --r1-box: 28vw; 
+            --r-other-box: 20vw;
+            --r1-podium-h: 110px;
+            --r-other-podium-h: 80px;
+            --crown-size: 12vw;
         }
 
         html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: #000 url('oc.png') no-repeat center center fixed; background-size: cover; font-family: 'Segoe UI', Roboto, sans-serif; color: white; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: #000 url('oc.png') no-repeat center center fixed; background-size: cover; font-family: sans-serif; color: white; }
         
-        .fixed-top-container { position: fixed; top: 0; left: 0; width: 100%; z-index: 100; background: linear-gradient(to bottom, rgba(0,0,0,0.8) 20%, transparent); pointer-events: none; }
-        .header-content { pointer-events: auto; }
-        .top-header { padding-top: calc(15px + env(safe-area-inset-top)); margin-bottom: 20px; }
+        .fixed-top-container { position: fixed; top: 0; left: 0; width: 100%; z-index: 100; }
+        .top-header { padding-top: calc(15px + env(safe-area-inset-top)); margin-bottom: 10px; text-align: center; }
         
         .main-tabs { display: flex; justify-content: center; gap: 30px; margin-bottom: 15px; }
-        .tab-item { font-size: 18px; font-weight: 600; color: #aaa; cursor: pointer; transition: 0.3s; }
-        .tab-item.active { color: #fff; text-shadow: 0 0 10px #ffd700; border-bottom: 2px solid #ffd700; }
+        .tab-item { font-size: 18px; font-weight: 600; color: #aaa; cursor: pointer; }
+        .tab-item.active { color: #fff; border-bottom: 2px solid #ffd700; }
         
-        .sub-tabs-container { display: flex; justify-content: center; margin: 0 auto; width: 90%; max-width: 350px; background: rgba(255, 255, 255, 0.1); border-radius: 25px; padding: 2px; border: 1px solid rgba(255,215,0,0.3); }
-        .sub-tab { flex: 1; text-align: center; padding: 8px 0; border-radius: 25px; font-size: 14px; cursor: pointer; color: #ddd; }
+        .sub-tabs-container { display: flex; justify-content: center; margin: 0 auto; width: 85%; background: rgba(255, 255, 255, 0.1); border-radius: 25px; padding: 2px; }
+        .sub-tab { flex: 1; text-align: center; padding: 8px 0; border-radius: 25px; font-size: 14px; color: #ddd; }
         .sub-tab.active { background: linear-gradient(to right, #f8d478, #b8860b); color: #000; font-weight: bold; }
         
-        @keyframes birdFlap { 0%, 100% { transform: scale(1) translateY(0); } 50% { transform: scale(1.05, 0.95) translateY(-5px); } }
-        @keyframes crystalReflectionMove { 0% { transform: translateX(-150%) skewX(-25deg); } 50%, 100% { transform: translateX(150%) skewX(-25deg); } }
-        @keyframes podiumFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-        
-        .top-section { display: flex; justify-content: center; align-items: flex-end; padding-bottom: 30px; min-height: 380px; pointer-events: auto; }
-        .podium-item { display: flex; flex-direction: column; align-items: center; position: relative; animation: podiumFloat 4s ease-in-out infinite; will-change: transform; }
-        .rank-1 { order: 2; z-index: 10; margin: 0 10px; transform: translateY(var(--r1-y-offset)); } 
-        .rank-2 { order: 1; margin-right: var(--r2-gap); margin-bottom: 10px; transform: translateY(var(--r2-y-offset)); } 
-        .rank-3 { order: 3; margin-left: var(--r3-gap); margin-bottom: 10px; transform: translateY(var(--r3-y-offset)); }
-        
-        .crown-image-container {
-            width: var(--crown-icon-size);
-            height: var(--crown-icon-size);
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* Top 3 Section - Fixed Positioning for Mobile */
+        .top-section { 
+            display: flex; justify-content: center; align-items: flex-end; 
+            padding: 0 10px 20px; min-height: 350px; width: 100%;
         }
 
-        .avatar-box { position: relative; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; animation: birdFlap 2s ease-in-out infinite; }
-        .profile-img { border-radius: 50%; object-fit: cover; background: #333; z-index: 1; }
-        .avatar-box::after { content: ""; position: absolute; top: 51%; left: 50%; transform: translate(-50%, -50%); background-size: contain; background-repeat: no-repeat; background-position: center; z-index: 10; pointer-events: none; }
+        .podium-item { display: flex; flex-direction: column; align-items: center; position: relative; flex: 1; }
+
+        /* Overlap logic taaki screen se bahar na jaye */
+        .rank-1 { order: 2; z-index: 20; transform: scale(1.1); } 
+        .rank-2 { order: 1; z-index: 10; margin-right: -5vw; } 
+        .rank-3 { order: 3; z-index: 10; margin-left: -5vw; }
         
-        .rank-1 .avatar-box { width: var(--r1-box-size); height: var(--r1-box-size); }
-        .rank-1 .avatar-box::after { background-image: url('gold-frame.png'); width: var(--r1-frame-scale); height: var(--r1-frame-scale); }
-        .rank-1 .profile-img { width: var(--r1-img-fit); height: var(--r1-img-fit); }
+        .crown-image-container { width: var(--crown-size); height: var(--crown-size); z-index: 25; margin-bottom: -5px; }
+        .crown-image { width: 100%; height: 100%; object-fit: contain; }
+
+        .avatar-box { position: relative; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; }
+        .profile-img { border-radius: 50%; object-fit: cover; background: #333; z-index: 1; width: 70%; height: 70%; }
+        .avatar-box::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-size: contain; background-repeat: no-repeat; z-index: 10; width: 180%; height: 180%; }
         
-        .rank-2 .avatar-box { width: var(--r2-box-size); height: var(--r2-box-size); }
-        .rank-2 .avatar-box::after { background-image: url('silver-frame.png'); width: var(--r2-frame-scale); height: var(--r2-frame-scale); }
-        .rank-2 .profile-img { width: var(--r2-img-fit); height: var(--r2-img-fit); }
+        .rank-1 .avatar-box { width: var(--r1-box); height: var(--r1-box); }
+        .rank-1 .avatar-box::after { background-image: url('gold-frame.png'); }
         
-        .rank-3 .avatar-box { width: var(--r3-box-size); height: var(--r3-box-size); }
-        .rank-3 .avatar-box::after { background-image: url('bronze-frame.png'); width: var(--r3-frame-scale); height: var(--r3-frame-scale); }
-        .rank-3 .profile-img { width: var(--r3-img-fit); height: var(--r3-img-fit); }
+        .rank-2 .avatar-box, .rank-3 .avatar-box { width: var(--r-other-box); height: var(--r-other-box); }
+        .rank-2 .avatar-box::after { background-image: url('silver-frame.png'); }
+        .rank-3 .avatar-box::after { background-image: url('bronze-frame.png'); }
 
         .podium-base { 
-            position: relative; overflow: hidden; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            border: 1px solid rgba(255,255,255,0.4); z-index: 6;
-            box-shadow: inset 0 0 15px rgba(255,255,255,0.2);
+            position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border: 1px solid rgba(255,255,255,0.4); z-index: 6; width: 100%;
             clip-path: polygon(10% 0%, 90% 0%, 100% 20%, 100% 100%, 0% 100%, 0% 20%);
         }
 
-        .podium-base::after { 
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5) 45%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.5) 55%, transparent); 
-            animation: crystalReflectionMove 3s infinite ease-in-out; z-index: 8; 
-        }
+        .rank-1 .podium-base { background: linear-gradient(135deg, #bf953f, #fcf6ba); height: var(--r1-podium-h); }
+        .rank-2 .podium-base { background: linear-gradient(135deg, #a8a8a8, #ffffff); height: var(--r-other-podium-h); }
+        .rank-3 .podium-base { background: linear-gradient(135deg, #a0522d, #ffa07a); height: var(--r-other-podium-h); }
 
-        .rank-1 .podium-base { background: linear-gradient(135deg, #bf953f, #fcf6ba, #aa771c); box-shadow: 0 0 30px rgba(255,215,0,0.6); width: var(--r1-podium-w); height: var(--r1-podium-h); }
-        .rank-2 .podium-base { background: linear-gradient(135deg, #a8a8a8, #ffffff, #707070); box-shadow: 0 0 20px rgba(255,255,255,0.3); width: var(--r-other-podium-w); height: var(--r-other-podium-h); }
-        .rank-3 .podium-base { background: linear-gradient(135deg, #a0522d, #ffa07a, #5e2f0d); box-shadow: 0 0 20px rgba(160,82,45,0.3); width: var(--r-other-podium-w); height: var(--r-other-podium-h); }
-
-        .rank-list-scroll { position: absolute; top: 480px; bottom: 0; left: 0; right: 0; overflow-y: auto; padding: 0 12px 20px; -webkit-overflow-scrolling: touch; z-index: 5; }
-        .list-item { display: flex; align-items: center; background: linear-gradient(90deg, rgba(40,25,10,0.9), rgba(20,15,5,0.8)); margin-bottom: 10px; padding: 12px 15px; border-radius: 50px 15px 15px 50px; border: 1px solid rgba(184, 134, 11, 0.4); }
-        .rank-number { width: 30px; font-weight: bold; color: #f8d478; font-size: 18px; }
-        .list-avatar { width: 52px; height: 52px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
-        .user-name { font-weight: bold; font-size: 15px; color: #fff; }
+        .rank-list-scroll { position: absolute; top: 460px; bottom: 0; left: 0; right: 0; overflow-y: auto; padding: 0 12px 20px; }
+        .list-item { display: flex; align-items: center; background: rgba(40,25,10,0.9); margin-bottom: 10px; padding: 12px; border-radius: 50px 15px 15px 50px; border: 1px solid rgba(184,134,11,0.4); }
     </style>
 </head>
 <body>
     <div class="fixed-top-container">
-        <div class="header-content">
-            <div class="top-header">
-                <div class="main-tabs">
-                    <div id="tab-rich" class="tab-item active">Rich list</div>
-                    <div id="tab-charm" class="tab-item">Charm</div>
-                </div>
-                <div class="sub-tabs-container">
-                    <div id="sub-daily" class="sub-tab active">Daily</div>
-                    <div id="sub-monthly" class="sub-tab">Monthly</div>
-                </div>
+        <div class="top-header">
+            <div class="main-tabs">
+                <div class="tab-item active">Rich list</div>
+                <div class="tab-item">Charm</div>
             </div>
-            <div class="top-section" id="top3-container"></div>
+            <div class="sub-tabs-container">
+                <div class="sub-tab active">Daily</div>
+                <div class="sub-tab">Monthly</div>
+            </div>
         </div>
+        <div class="top-section" id="top3-container"></div>
     </div>
-
     <div class="rank-list-scroll" id="full-list"></div>
 
     <script>
-        let currentMain = 'rich'; 
-        let currentSub = 'daily';
-        const DUMMY_AVATAR = "https://ui-avatars.com/api/?background=333&color=fff&name=";
+        const data = [
+            {name: "Admin User", points: 5000000},
+            {name: "Top Player", points: 2500000},
+            {name: "Elite Member", points: 1200000},
+            {name: "Crystal Star", points: 950000}
+        ];
+        
+        const top3Cont = document.getElementById('top3-container');
+        const crownImages = ['golden.png', 'silver.png', 'bronze.png'];
+        const classes = ["rank-1", "rank-2", "rank-3"];
 
-        function loadRankings() {
-            let data = getMockData(currentMain, currentSub);
-            renderList(data);
+        for(let i=0; i<3; i++) {
+            const pts = (data[i].points / 1000).toFixed(1) + 'k';
+            top3Cont.innerHTML += `
+                <div class="podium-item ${classes[i]}">
+                    <div class="crown-image-container"><img src="${crownImages[i]}" class="crown-image"></div>
+                    <div class="avatar-box"><img src="https://ui-avatars.com/api/?name=${data[i].name}" class="profile-img"></div>
+                    <div class="podium-base">
+                        <span style="color:#000; font-weight:bold; font-size:12px;">${pts}</span>
+                        <span style="color:#000; font-size:9px;">Diamond</span>
+                    </div>
+                    <p style="font-size:10px; margin-top:5px; font-weight:bold; text-align:center;">${data[i].name}</p>
+                </div>`;
         }
-
-        function renderList(data) {
-            const top3Cont = document.getElementById('top3-container');
-            const listCont = document.getElementById('full-list');
-            top3Cont.innerHTML = ''; listCont.innerHTML = '';
-            
-            const unit = (currentMain === 'rich') ? 'Diamond' : 'Coin';
-            const crownImages = ['golden.png', 'silver.png', 'bronze.png'];
-            const classes = ["rank-1", "rank-2", "rank-3"];
-
-            for(let i=0; i<3; i++) {
-                if(data[i]) {
-                    const user = data[i];
-                    const pts = (user.points >= 1000) ? (user.points / 1000).toFixed(1) + 'k' : user.points;
-                    const avatar = user.img || (DUMMY_AVATAR + user.name);
-                    
-                    const specialMargin = (i === 1 || i === 2) ? 'margin-bottom: 25px;' : 'margin-bottom: -15px;';
-                    const specialZIndex = (i === 1 || i === 2) ? 'z-index: 16;' : 'z-index: 15;';
-
-                    top3Cont.innerHTML += `
-                        <div class="podium-item ${classes[i]}">
-                            <div class="crown-image-container" style="${specialMargin} ${specialZIndex}">
-                                <img src="${crownImages[i]}" alt="Rank ${i+1}" class="crown-image">
-                            </div>
-                            <div class="avatar-box"><img src="${avatar}" class="profile-img"></div>
-                            <div class="podium-base">
-                                <span style="color:#000; font-weight:bold; font-size:14px; z-index:10;">${pts}</span>
-                                <span style="color:#000; font-size:10px; font-weight:bold; z-index:10;">${unit}</span>
-                            </div>
-                            <p style="font-size:12px; margin-top:10px; font-weight:bold; text-shadow: 1px 1px 3px #000;">${user.name}</p>
-                        </div>`;
-                }
-            }
-
-            data.slice(3).forEach((user, index) => {
-                const pts = (user.points >= 1000) ? (user.points / 1000).toFixed(1) + 'k' : user.points;
-                const avatar = user.img || (DUMMY_AVATAR + user.name);
-                listCont.innerHTML += `
-                    <div class="list-item">
-                        <div class="rank-number">${index + 4}</div>
-                        <img src="${avatar}" class="list-avatar" style="margin-left: 10px;">
-                        <div style="flex-grow:1; margin-left:15px;">
-                            <div class="user-name">${user.name}</div>
-                            <div style="color:#4CAF50; font-size:11px; font-weight:bold;">★ Lv.${user.level || 1}</div>
-                        </div>
-                        <div style="text-align:right">
-                            <div style="font-size:18px; font-weight:bold; color:#f8d478;">${pts}</div>
-                            <div style="font-size:10px; opacity:0.8;">${unit}</div>
-                        </div>
-                    </div>`;
-            });
-        }
-
-        function getMockData(main, sub) {
-            return [
-                {name: "Admin User", points: 5000000, level: 99},
-                {name: "Top Player", points: 2500000, level: 85},
-                {name: "Elite Member", points: 1200000, level: 70},
-                {name: "Crystal Star", points: 950000, level: 60},
-                {name: "Active Host", points: 800000, level: 55},
-                {name: "Diamond King", points: 650000, level: 40}
-            ];
-        }
-
-        document.getElementById('tab-rich').onclick = () => { currentMain = 'rich'; updateTabUI('main-tabs', 'tab-rich'); loadRankings(); };
-        document.getElementById('tab-charm').onclick = () => { currentMain = 'charm'; updateTabUI('main-tabs', 'tab-charm'); loadRankings(); };
-        document.getElementById('sub-daily').onclick = () => { currentSub = 'daily'; updateTabUI('sub-tabs-container', 'sub-daily'); loadRankings(); };
-        document.getElementById('sub-monthly').onclick = () => { currentSub = 'monthly'; updateTabUI('sub-tabs-container', 'sub-monthly'); loadRankings(); };
-
-        function updateTabUI(containerClass, activeId) {
-            document.querySelector('.' + containerClass).querySelectorAll('div').forEach(el => el.classList.remove('active'));
-            document.getElementById(activeId).classList.add('active');
-        }
-
-        loadRankings();
     </script>
 </body>
 </html>
