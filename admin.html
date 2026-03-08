@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iKChat - Professional Admin Panel</title>
+    <style>
+        /* --- DESIGN SECTION --- */
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background: #0f0f0f; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .admin-card { background: #1a1a1a; padding: 30px; border-radius: 20px; border: 2px solid #ffd700; box-shadow: 0 0 30px rgba(255, 215, 0, 0.2); width: 90%; max-width: 400px; text-align: center; }
+        h2 { color: #ffd700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        input, select, button { width: 100%; padding: 14px; margin: 12px 0; border-radius: 12px; border: 1px solid #333; background: #252525; color: white; font-size: 16px; outline: none; transition: 0.3s; }
+        input:focus, select:focus { border-color: #ffd700; }
+        button { background: linear-gradient(135deg, #f8d478 0%, #b8860b 100%); color: black; font-weight: bold; border: none; cursor: pointer; }
+        button:active { transform: scale(0.98); }
+        .hidden { display: none !important; }
+        #status { margin-top: 15px; font-weight: bold; min-height: 20px; }
+    </style>
+</head>
+<body>
+
+    <div id="login-section" class="admin-card">
+        <h2>Admin Login</h2>
+        <input type="email" id="admin-email" placeholder="Admin Email" value="admin@ikchat.com">
+        <input type="password" id="admin-pass" placeholder="Enter Password">
+        <button id="login-btn">VERIFY & ACCESS</button>
+        <p id="error" style="color:#ff4d4d; font-size: 14px;"></p>
+    </div>
+
+    <div id="control-section" class="admin-card hidden">
+        <h2>Control Panel</h2>
+        <p style="font-size: 14px; margin-bottom: 5px; opacity: 0.8;">Select Display Limit:</p>
+        
+        <select id="topCount">
+            <option value="10">Top 10</option>
+            <option value="20">Top 20</option>
+            <option value="30">Top 30</option>
+            <option value="40">Top 40</option>
+            <option value="50">Top 50</option>
+            <option value="60">Top 60</option>
+            <option value="70">Top 70</option>
+            <option value="80">Top 80</option>
+            <option value="90">Top 90</option>
+            <option value="100" selected>Top 100</option>
+        </select>
+
+        <button id="update-btn">UPDATE SYSTEM</button>
+        
+        <button onclick="location.reload()" style="background:transparent; color:#ffd700; border:1px solid #ffd700; margin-top: 15px;">
+            LOGOUT
+        </button>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        /* --- SECURE LOGIC (CLEAN) --- */
+        const ADMIN_EMAIL = "admin@ikchat.com";
+        const ADMIN_PASS = "ikchat123"; 
+
+        // Login Handler
+        document.getElementById('login-btn').onclick = () => {
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
+            const errorElement = document.getElementById('error');
+
+            if(email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('control-section').classList.remove('hidden');
+            } else {
+                errorElement.innerText = "❌ Access Denied: Incorrect Password!";
+            }
+        };
+
+        // Update Handler (Ready for Company Backend)
+        document.getElementById('update-btn').onclick = () => {
+            const statusDiv = document.getElementById('status');
+            const limit = document.getElementById('topCount').value;
+            
+            statusDiv.innerHTML = "<span style='color: #ffd700;'>Connecting to Server...</span>";
+
+            // Yahan Company ke developers apna API call (fetch/axios) lagayenge
+            console.log("Action: Update ranking limit to Top " + limit);
+
+            // Simulation of successful update
+            setTimeout(() => {
+                statusDiv.innerHTML = "<span style='color:#4CAF50'>✅ Live Database Updated: Top " + limit + "</span>";
+            }, 1200);
+        };
+    </script>
+</body>
+</html>
