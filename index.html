@@ -47,7 +47,7 @@
         @keyframes podiumFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
         
         .top-section { display: flex; justify-content: center; align-items: flex-end; padding-bottom: 30px; min-height: 380px; pointer-events: auto; }
-        .podium-item { display: flex; flex-direction: column; align-items: center; position: relative; animation: podiumFloat 4s ease-in-out infinite; will-change: transform; }
+        .podium-item { display: flex; flex-direction: column; align-items: center; position: relative; animation: podiumFloat 4s ease-in-out infinite; will-change: transform; cursor: pointer; }
         
         /* Merged Logic */
         .rank-1 { order: 2; z-index: 10; margin: 0 var(--merge-overlap); transform: translateY(var(--r1-y-offset)); } 
@@ -94,7 +94,7 @@
         .rank-3 .podium-base { background: linear-gradient(135deg, #a0522d, #ffa07a, #5e2f0d); box-shadow: 0 0 20px rgba(160,82,45,0.3); width: var(--r-other-podium-w); height: var(--r-other-podium-h); }
 
         .rank-list-scroll { position: absolute; top: 480px; bottom: 0; left: 0; right: 0; overflow-y: auto; padding: 0 12px 20px; -webkit-overflow-scrolling: touch; z-index: 5; }
-        .list-item { display: flex; align-items: center; background: linear-gradient(90deg, rgba(40,25,10,0.9), rgba(20,15,5,0.8)); margin-bottom: 10px; padding: 12px 15px; border-radius: 50px 15px 15px 50px; border: 1px solid rgba(184, 134, 11, 0.4); }
+        .list-item { display: flex; align-items: center; background: linear-gradient(90deg, rgba(40,25,10,0.9), rgba(20,15,5,0.8)); margin-bottom: 10px; padding: 12px 15px; border-radius: 50px 15px 15px 50px; border: 1px solid rgba(184, 134, 11, 0.4); cursor: pointer; }
         .rank-number { width: 30px; font-weight: bold; color: #f8d478; font-size: 18px; }
         .list-avatar { width: 52px; height: 52px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
         .user-name { font-weight: bold; font-size: 15px; color: #fff; }
@@ -126,7 +126,21 @@
 
         function loadRankings() {
             let data = getMockData(currentMain, currentSub);
+            
+            // 1. Logic: Sorting Users by Points (High to Low)
+            data.sort((a, b) => b.points - a.points);
+            
             renderList(data);
+        }
+
+        // 2. Logic: Profile Click Handling
+        function openProfile(user) {
+            if (user.isHide) {
+                // Agar profile hide hai toh kuch nahi karega
+                return;
+            }
+            // Yahan aap apna profile page ka link dal sakte hain
+            alert("Opening profile: " + user.name);
         }
 
         function renderList(data) {
@@ -147,7 +161,6 @@
                     const specialMargin = (i === 1 || i === 2) ? 'margin-bottom: 25px;' : 'margin-bottom: -15px;';
                     const specialZIndex = (i === 1 || i === 2) ? 'z-index: 16;' : 'z-index: 15;';
 
-                    // logic to show only Rank 1 crown
                     const crownHTML = (i === 0) 
                         ? `<div class="crown-image-container" style="${specialMargin} ${specialZIndex}">
                                 <img src="${crownImages[i]}" alt="Rank ${i+1}" class="crown-image">
@@ -155,7 +168,7 @@
                         : `<div class="crown-image-container" style="${specialMargin} visibility: hidden;"></div>`;
 
                     top3Cont.innerHTML += `
-                        <div class="podium-item ${classes[i]}">
+                        <div class="podium-item ${classes[i]}" onclick='openProfile(${JSON.stringify(user)})'>
                             ${crownHTML}
                             <div class="avatar-box"><img src="${avatar}" class="profile-img"></div>
                             <div class="podium-base">
@@ -171,7 +184,7 @@
                 const pts = (user.points >= 1000) ? (user.points / 1000).toFixed(1) + 'k' : user.points;
                 const avatar = user.img || (DUMMY_AVATAR + user.name);
                 listCont.innerHTML += `
-                    <div class="list-item">
+                    <div class="list-item" onclick='openProfile(${JSON.stringify(user)})'>
                         <div class="rank-number">${index + 4}</div>
                         <img src="${avatar}" class="list-avatar" style="margin-left: 10px;">
                         <div style="flex-grow:1; margin-left:15px;">
@@ -186,14 +199,29 @@
             });
         }
 
+        // 3. Logic: Daily Reset at 9:30 PM
+        function checkResetTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            // 9:30 PM is 21:30
+            if (hours === 21 && minutes === 30 && seconds === 0) {
+                console.log("Daily Resetting Rankings...");
+                loadRankings(); // Re-fetch or clear data here
+            }
+        }
+        setInterval(checkResetTime, 1000);
+
         function getMockData(main, sub) {
             return [
-                {name: "Admin User", points: 5000000, level: 99},
-                {name: "Top Player", points: 2500000, level: 85},
-                {name: "Elite Member", points: 1200000, level: 70},
-                {name: "Crystal Star", points: 950000, level: 60},
-                {name: "Active Host", points: 800000, level: 55},
-                {name: "Diamond King", points: 650000, level: 40}
+                {name: "Admin User", points: 5000000, level: 99, isHide: false},
+                {name: "Top Player", points: 2500000, level: 85, isHide: false},
+                {name: "Elite Member", points: 1200000, level: 70, isHide: true}, // Hidden profile
+                {name: "Crystal Star", points: 950000, level: 60, isHide: false},
+                {name: "Active Host", points: 800000, level: 55, isHide: false},
+                {name: "Diamond King", points: 650000, level: 40, isHide: false}
             ];
         }
 
