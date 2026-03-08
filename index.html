@@ -8,52 +8,22 @@
     <style>
         /* --- DESIGN & FRAMES --- */
         :root {
-            /* =========================================
-               RANK 1 (GOLD) - ADJUSTMENTS
-               ========================================= */
-            --r1-box-size: 158px; 
-            --r1-frame-scale: 200%; 
-            --r1-img-fit: 61%;    /* Photo Size (Zoom) */
-            --r1-img-top: 0px;    /* Niche lane ke liye +, Upar ke liye - */
-            --r1-img-left: 0px;   /* Right ke liye +, Left ke liye - */
-            --r1-y-offset: 0px;
-
-            /* =========================================
-               RANK 2 (SILVER) - ADJUSTMENTS
-               ========================================= */
-            --r2-box-size: 90px; 
-            --r2-frame-scale: 177%; 
-            --r2-img-fit: 82%;    /* Photo Size (Zoom) */
-            --r2-img-top: 0px; 
-            --r2-img-left: 0px;
-            --r2-gap: 86px; 
-            --r2-y-offset: 15px;
-
-            /* =========================================
-               RANK 3 (BRONZE) - ADJUSTMENTS
-               ========================================= */
-            --r3-box-size: 90px; 
-            --r3-frame-scale: 177%; 
-            --r3-img-fit: 80%;    /* Photo Size (Zoom) */
-            --r3-img-top: 0px; 
-            --r3-img-left: 0px;
-            --r3-gap: 88px; 
-            --r3-y-offset: 15px;
-
-            /* SHARED SETTINGS */
+            --r1-box-size: 158px; --r1-frame-scale: 200%; --r1-img-fit: 61%; --r1-y-offset: 0px;
+            --r2-box-size: 90px; --r2-frame-scale: 177%; --r2-img-fit: 82%; --r2-gap: 0px; --r2-y-offset: 15px;
+            --r3-box-size: 90px; --r3-frame-scale: 177%; --r3-img-fit: 80%; --r3-gap: 0px; --r3-y-offset: 15px;
             --r1-podium-w: 135px;
             --r1-podium-h: 115px;
             --r-other-podium-w: 100px;
             --r-other-podium-h: 80px;
             --crown-icon-size: 55px;
+            
+            /* Merge Adjustment */
+            --merge-overlap: -15px; /* Podiums ko kitna andar ghusana hai */
         }
 
         .crown-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background-color: transparent !important;
-            border: none !important;
+            width: 100%; height: 100%; object-fit: contain;
+            background-color: transparent !important; border: none !important;
         }
 
         html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
@@ -78,37 +48,32 @@
         
         .top-section { display: flex; justify-content: center; align-items: flex-end; padding-bottom: 30px; min-height: 380px; pointer-events: auto; }
         .podium-item { display: flex; flex-direction: column; align-items: center; position: relative; animation: podiumFloat 4s ease-in-out infinite; will-change: transform; }
-        .rank-1 { order: 2; z-index: 10; margin: 0 10px; transform: translateY(var(--r1-y-offset)); } 
-        .rank-2 { order: 1; margin-right: var(--r2-gap); margin-bottom: 10px; transform: translateY(var(--r2-y-offset)); } 
-        .rank-3 { order: 3; margin-left: var(--r3-gap); margin-bottom: 10px; transform: translateY(var(--r3-y-offset)); }
+        
+        /* Merged Logic */
+        .rank-1 { order: 2; z-index: 10; margin: 0 var(--merge-overlap); transform: translateY(var(--r1-y-offset)); } 
+        .rank-2 { order: 1; z-index: 5; transform: translateY(var(--r2-y-offset)); } 
+        .rank-3 { order: 3; z-index: 5; transform: translateY(var(--r3-y-offset)); }
         
         .crown-image-container {
-            width: var(--crown-icon-size);
-            height: var(--crown-icon-size);
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: var(--crown-icon-size); height: var(--crown-icon-size);
+            position: relative; display: flex; justify-content: center; align-items: center;
         }
 
         .avatar-box { position: relative; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; animation: birdFlap 2s ease-in-out infinite; }
-        .profile-img { border-radius: 50%; object-fit: cover; background: #333; z-index: 1; position: relative; }
+        .profile-img { border-radius: 50%; object-fit: cover; background: #333; z-index: 1; }
         .avatar-box::after { content: ""; position: absolute; top: 51%; left: 50%; transform: translate(-50%, -50%); background-size: contain; background-repeat: no-repeat; background-position: center; z-index: 10; pointer-events: none; }
         
-        /* Rank 1 Styles */
         .rank-1 .avatar-box { width: var(--r1-box-size); height: var(--r1-box-size); }
         .rank-1 .avatar-box::after { background-image: url('gold-frame.png'); width: var(--r1-frame-scale); height: var(--r1-frame-scale); }
-        .rank-1 .profile-img { width: var(--r1-img-fit); height: var(--r1-img-fit); top: var(--r1-img-top); left: var(--r1-img-left); }
+        .rank-1 .profile-img { width: var(--r1-img-fit); height: var(--r1-img-fit); }
         
-        /* Rank 2 Styles */
         .rank-2 .avatar-box { width: var(--r2-box-size); height: var(--r2-box-size); }
         .rank-2 .avatar-box::after { background-image: url('silver-frame.png'); width: var(--r2-frame-scale); height: var(--r2-frame-scale); }
-        .rank-2 .profile-img { width: var(--r2-img-fit); height: var(--r2-img-fit); top: var(--r2-img-top); left: var(--r2-img-left); }
+        .rank-2 .profile-img { width: var(--r2-img-fit); height: var(--r2-img-fit); }
         
-        /* Rank 3 Styles */
         .rank-3 .avatar-box { width: var(--r3-box-size); height: var(--r3-box-size); }
         .rank-3 .avatar-box::after { background-image: url('bronze-frame.png'); width: var(--r3-frame-scale); height: var(--r3-frame-scale); }
-        .rank-3 .profile-img { width: var(--r3-img-fit); height: var(--r3-img-fit); top: var(--r3-img-top); left: var(--r3-img-left); }
+        .rank-3 .profile-img { width: var(--r3-img-fit); height: var(--r3-img-fit); }
 
         .podium-base { 
             position: relative; overflow: hidden; 
@@ -182,11 +147,16 @@
                     const specialMargin = (i === 1 || i === 2) ? 'margin-bottom: 25px;' : 'margin-bottom: -15px;';
                     const specialZIndex = (i === 1 || i === 2) ? 'z-index: 16;' : 'z-index: 15;';
 
+                    // logic to show only Rank 1 crown
+                    const crownHTML = (i === 0) 
+                        ? `<div class="crown-image-container" style="${specialMargin} ${specialZIndex}">
+                                <img src="${crownImages[i]}" alt="Rank ${i+1}" class="crown-image">
+                           </div>` 
+                        : `<div class="crown-image-container" style="${specialMargin} visibility: hidden;"></div>`;
+
                     top3Cont.innerHTML += `
                         <div class="podium-item ${classes[i]}">
-                            <div class="crown-image-container" style="${specialMargin} ${specialZIndex}">
-                                <img src="${crownImages[i]}" alt="Rank ${i+1}" class="crown-image">
-                            </div>
+                            ${crownHTML}
                             <div class="avatar-box"><img src="${avatar}" class="profile-img"></div>
                             <div class="podium-base">
                                 <span style="color:#000; font-weight:bold; font-size:14px; z-index:10;">${pts}</span>
